@@ -1,0 +1,131 @@
+# ======================================
+# Homework 3
+# ======================================
+
+# Problem 1
+n.simu = 10^4
+
+# (a) Inverse Method
+U = runif(n.simu)
+X = (-1+sqrt(8*U+1))/2
+hist(X)
+mean(X)
+var(X)
+
+
+# (b) Acceptance-Rejection
+X = rep(0, n.simu)
+for (i in 1:n.simu){
+  accept = 0
+  while (accept == 0){
+    U = runif(1)
+    V = runif(1)
+    ratio = 1/3 + 2*U/3
+    if (V < ratio){
+      accept = 1
+    }
+  }
+  X[i] = U
+}
+hist(X)
+mean(X)
+var(X)
+
+# (c) Composition
+U = runif(n.simu)
+V = runif(n.simu)
+X = U
+X[V<0.5] = sqrt(U[V<0.5])
+hist(X)
+mean(X)
+var(X)
+
+
+
+
+
+
+
+
+
+# Problem 2
+n.simu = 10^4
+
+# (a) Acceptance-Rejection
+X = rep(0, n.simu)
+for (i in 1:n.simu){
+  accept = 0
+  while (accept == 0){
+    U = runif(1)
+    Y = -log(U)
+    V = runif(1)
+    ratio = (exp(-Y)+2*exp(-2*Y)-3*exp(-3*Y))/(2*exp(-Y))
+    if (V < ratio){
+      accept = 1
+    }
+  }
+  X[i] = Y
+}
+hist(X)
+mean(X)
+var(X)
+
+
+# (b) Maximum
+X = rep(0, n.simu)
+U1 = runif(n.simu)
+U2 = runif(n.simu)
+X1 = -log(U1)
+X2 = -log(U2)/2
+for (i in 1:n.simu){
+  X[i] = max(X1[i], X2[i])
+}
+hist(X)
+mean(X)
+var(X)
+
+
+
+
+
+
+# Problem 3
+n.simu = 10^4
+
+# (a) Acceptance-Rejection
+X = rep(0, n.simu)
+for (i in 1:n.simu){
+  accept = 0
+  while (accept == 0){
+    U = runif(1)
+    V = runif(1)
+    ratio = (1/4 + 2*U^3 + 5*U^4/4)/3
+    if (V < ratio){
+      accept = 1
+    }
+  }
+  X[i] = U
+}
+hist(X)
+mean(X)
+var(X)
+
+# (b) Composition
+U = runif(n.simu)
+V = runif(n.simu)
+X = U
+X[V > 1/4] = (U[V>1/4])^(1/5)
+X[V > 1/2] = (U[V>1/2])^(1/4)
+hist(X)
+mean(X)
+var(X)
+
+
+
+
+
+
+
+
+# Clear Memory
+rm(list = ls())

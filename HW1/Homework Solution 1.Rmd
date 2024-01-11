@@ -1,0 +1,31 @@
+# ======================================
+# Homework 1
+# ======================================
+
+# Problem 1
+n.simu = 10^4                 
+U = runif(n.simu)
+
+# (a)
+cor(U, sqrt(1-U^2))
+
+# (b)
+cor(U^2, sqrt(1-U^2))
+
+
+# Problem 2
+N.simu = 10^4
+max.N = 10^4
+N = rep(0, N.simu)
+for(i in 1:N.simu){
+  U = runif(max.N)
+  U = cumsum(U)  
+  U[U>1]=1
+  U[U<1]=0
+  U=1-U
+  N[i]=sum(U)+1
+}
+mean(N)
+
+# Clear Memory
+rm(list = ls())

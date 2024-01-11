@@ -1,0 +1,85 @@
+# ======================================
+# Homework 2
+# ======================================
+
+# Problem 1 (treat X as exp(1). In fact, it's E[F(X)])
+n.simu = 10^6
+U = runif(n.simu)
+X = -log(U)
+I = 1-exp(-X)
+mean(I)
+
+
+# Problem 2 
+n.simu = 10^4
+hit = rep(0, n.simu)
+Deck = 1:100
+Deck.Size = length(Deck)
+
+for (i.simu in 1:n.simu){
+  Deck.Remain = Deck
+  Deck.New = rep(0,Deck.Size)
+  U = runif(Deck.Size)
+  for (i in Deck.Size:1){
+    Card.Chosen = Deck.Remain[floor(U[i]*i+1)]
+    Deck.New[i] = Card.Chosen
+    Deck.Remain = Deck.Remain[Deck.Remain!=Card.Chosen]
+  }
+  hit[i.simu] = length(Deck.New[Deck.New==Deck])
+}
+mean(hit)
+var(hit)
+
+
+
+# Problem 3 
+n.simu = 10^5
+p = 0.5
+r = 3
+
+# (a)
+NB = rep(0, n.simu)
+for (i in 1:n.simu){
+  U = runif(r)
+  G = floor(log(U)/log(1-p))+1
+  NB[i] = sum(G)
+}
+hist(NB)
+mean(NB)
+var(NB)
+
+# (c)
+NB = rep(r, n.simu)
+U = runif(n.simu)
+j=r
+cur.p=p^r
+while (max(U)>cur.p){
+  NB[U>cur.p] = NB[U>cur.p]+1
+  U = U - cur.p
+  cur.p=j*(1-p)*cur.p/(j+1-r)
+  j = j +1
+}
+hist(NB)
+mean(NB)
+var(NB)
+
+
+# (d)
+NB = rep(r, n.simu)
+max.Ber = 10*r
+for (i in 1:n.simu){
+  U = runif(max.Ber)
+  U[U>p] = 1
+  U[U<=p] = 0
+  U = cumsum(U)
+  U[U<r] = 1
+  U[U>=r] = 0
+  NB[i] = sum(U) + 1
+}
+hist(NB)
+mean(NB)
+var(NB)
+
+
+# Clear Memory
+rm(list = ls())

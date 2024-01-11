@@ -1,0 +1,112 @@
+# ======================================
+# Homework 4
+# ======================================
+
+
+# Problem 1: Thinning
+
+T.max = 10
+cur.lambda = 7 
+
+PoissonProcess <- function(T.max){
+  cur.t = 0
+  T = c()
+  while (cur.t < T.max){
+    U = runif(1)
+    V = runif(1)
+    cur.t = cur.t - log(U)/cur.lambda
+    ratio = (3+4/(1+cur.t))/cur.lambda
+    if (V<ratio){
+      T = c(T, cur.t)
+    }
+  }
+  T = T[T<T.max]
+  return(T)
+}
+
+
+  #Plot
+  T = PoissonProcess(T.max)
+  plot(T, rep(0,length(T)))
+
+
+  # Checking
+  TheoreticalMean = 3*T.max + 4*log(1+T.max)  
+  n.simu = 10^4
+  N = rep(0, n.simu)
+  for (i in 1:n.simu){
+    T = PoissonProcess(T.max)
+    N[i] = length(T)
+  }
+  mean(N)
+
+
+
+
+# Problem 2: Copula - The 0.42 Version
+
+n.simu = 10^4
+
+meanX = c(1,2,3)
+stdX = meanX
+rho = 0.5
+
+covM = matrix(rep(rho,9), nrow=3, ncol=3)
+for (i in 1:3){
+  covM[i,i] = stdX[i]^2
+}
+
+corM = matrix(rep(0,9), nrow=3, ncol=3)
+for (i in 1:3){
+for (j in 1:3){
+  corM[i,j] = covM[i,j]/stdX[i]/stdX[j]
+}
+}
+
+
+  #Simulating Gaussian - Direct
+  
+  library(mvtnorm)
+  X = rmvnorm(n.simu, rep(0,3), corM)
+  
+        #Checking
+        cor(X)
+        check = 1
+        hist(X[,check])
+
+
+
+  #Change Marginal
+  
+  for (i in 1:3){
+    Y[,i] = pnorm(X[,i])
+    Y[,i] = -log(1-Y[,i])*meanX[i]
+  }
+    
+        #Checking
+        cor(Y)
+        cov(Y)
+        
+        check = 3
+        mean(Y[,check])
+        sd(Y[,check])
+        hist(Y[,check])
+    
+
+
+# The point is that transformation preserves the copula, so the "correlation parameter"
+# is preserved, but that "correlation parameter" is no longer the correlation of the 
+# random variables.
+    
+
+
+# So what can be preserved - Spearman Correlation
+cor(X, method="spearman")
+cor(Y, method="spearman")
+
+
+
+
+    
+# Clear Memory
+rm(list = ls())
